@@ -5,6 +5,7 @@ import styles from "./Cards.module.css";
 import { EndGameModal } from "../../components/EndGameModal/EndGameModal";
 import { Button } from "../../components/Button/Button";
 import { Card } from "../../components/Card/Card";
+import { useSimpleModeContext } from "../../context/hooks/useSimpleMode";
 
 // Игра закончилась
 const STATUS_LOST = "STATUS_LOST";
@@ -45,6 +46,11 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
   const [cards, setCards] = useState([]);
   // Текущий статус игры
   const [status, setStatus] = useState(STATUS_PREVIEW);
+
+  // Получаем контекст упрощенной версии [вкл/выкл]
+  const { simpleMode } = useSimpleModeContext();
+  // Количество попыток в легком режиме
+  const [countGame, setCountGame] = useState(3);
 
   // Дата начала игры
   const [gameStartDate, setGameStartDate] = useState(null);
@@ -127,6 +133,18 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
 
     // "Игрок проиграл", т.к на поле есть две открытые карты без пары
     if (playerLost) {
+      if (simpleMode) {
+        if (countGame > 1) {
+          setTimeout(() => {
+            openCardsWithoutPair.map(card => {
+              return (card.open = false);
+            });
+          }, 450);
+          setCountGame(countGame - 1);
+          return;
+        }
+      }
+      setCountGame(3);
       finishGame(STATUS_LOST);
       return;
     }
@@ -195,7 +213,11 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
             </>
           )}
         </div>
-        {status === STATUS_IN_PROGRESS ? <Button onClick={resetGame}>Начать заново</Button> : null}
+        {status === STATUS_IN_PROGRESS ? (
+          <Button countGame={simpleMode ? countGame : null} onClick={resetGame}>
+            Начать заново
+          </Button>
+        ) : null}
       </div>
 
       <div className={styles.cards}>
@@ -209,6 +231,8 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
           />
         ))}
       </div>
+
+      {!simpleMode ? null : <p>Осталось попыток: {countGame}</p>}
 
       {isGameEnded ? (
         <div className={styles.modalContainer}>
