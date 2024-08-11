@@ -70,3 +70,14 @@
 
   margin-bottom: -12px;
 }
+
+p {
+  color: #fff;
+  font-family: StratosSkyeng;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 50px;
+  text-align: center;
+  font-size: 24px;
+  margin-top: 24px;
+}
