@@ -1,9 +1,9 @@
-import { useEffect } from "react";
-import { useLeaderBoardContext } from "../../context/hooks/useLeaderBoard";
-import styles from "./LeaderBoardPage.module.css";
-import { getLeaders } from "../../utils/api";
-import { Button } from "../../components/Button/Button";
 import { Link } from "react-router-dom";
+import { Button } from "../../components/Button/Button";
+import styles from "./LeaderBoardPage.module.css";
+import { useEffect } from "react";
+import { getLeaders } from "../../utils/api";
+import { useLeaderBoardContext } from "../../context/hooks/useLeaderBoard";
 
 export const LeaderBoardPage = () => {
   const { leaderList, setLeaderList } = useLeaderBoardContext();
@@ -16,7 +16,7 @@ export const LeaderBoardPage = () => {
       .catch(error => {
         console.log(error.message);
       });
-  }, []);
+  }, [setLeaderList]);
 
   return (
     <div className={styles.container}>

@@ -1,10 +1,10 @@
 import styles from "./EndGameLeaderBoardModal.module.css";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { addLeaders } from "../../utils/api";
-import celebrationImageUrl from "../EndGameModal/images/celebration.png";
 import { Button } from "../Button/Button";
+import celebrationImageUrl from "../EndGameModal/images/celebration.png";
+import { addLeaders } from "../../utils/api";
+import { useState } from "react";
 import { useLeaderBoardContext } from "../../context/hooks/useLeaderBoard";
+import { useNavigate } from "react-router-dom";
 import { useSimpleModeContext } from "../../context/hooks/useSimpleMode";
 
 export function EndGameLeaderBoardModal({ gameDurationMinutes, gameDurationSeconds, timeGame, resetGame }) {
