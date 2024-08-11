@@ -1,0 +1,98 @@
+.container {
+  width: 1000px;
+  min-height: 100%;
+  justify-content: center;
+  margin: 0 auto;
+  padding-bottom: 20px;
+}
+
+.header {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  padding-top: 52px;
+}
+
+.titlePage {
+  font-family: StratosSkyeng;
+  font-size: 24px;
+  color: white;
+}
+
+.rowTable {
+  width: 100%;
+  height: 64px;
+  background-color: white;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.rowTable__positionTitle {
+  font-family: StratosSkyeng;
+  font-size: 24px;
+  color: #999999;
+  width: 24%;
+}
+
+.rowTable__userTitle {
+  font-family: StratosSkyeng;
+  font-size: 24px;
+  color: #999999;
+  width: 35%;
+}
+
+.rowTable__achiveTitle {
+  font-family: StratosSkyeng;
+  font-size: 24px;
+  color: #999999;
+  width: 28%;
+}
+
+.rowTable__timeTitle {
+  font-family: StratosSkyeng;
+  font-size: 24px;
+  color: #999999;
+  width: 13%;
+}
+
+.rowTable__position {
+  font-family: StratosSkyeng;
+  font-size: 24px;
+  color: black;
+  width: 24%;
+}
+
+.rowTable__user {
+  font-family: StratosSkyeng;
+  font-size: 24px;
+  color: black;
+  width: 35%;
+}
+
+.rowTable__achive {
+  font-family: StratosSkyeng;
+  font-size: 24px;
+  color: black;
+  width: 28%;
+}
+
+.rowTable__time {
+  font-family: StratosSkyeng;
+  font-size: 24px;
+  color: black;
+  width: 13%;
+}
+
+svg {
+  margin-right: 12px;
+}

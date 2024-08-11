@@ -5,8 +5,6 @@ import { SimpleModeContext } from "../../context/SimpleModeContext";
 
 export function SelectLevelPage() {
   const { simpleMode, toggleSimpleMode } = useContext(SimpleModeContext);
-  console.log(simpleMode);
-  console.log(toggleSimpleMode);
   return (
     <div className={styles.container}>
       <div className={styles.modal}>
@@ -30,7 +28,10 @@ export function SelectLevelPage() {
         </ul>
         <div>
           <input type="checkbox" checked={simpleMode} onChange={toggleSimpleMode} />
-          <label htmlFor="simpleMode">Включить легкий режим</label>
+          <label htmlFor="simpleMode">Легкий режим — включает 3 жизни</label>
+          <Link to="/leaderboard">
+            <div className={styles.goLeaderBoard}>Перейти к лидерборду</div>
+          </Link>
         </div>
       </div>
     </div>
