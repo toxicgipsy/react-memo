@@ -164,9 +164,9 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
         if (countGame > 1) {
           setTimeout(() => {
             openCardsWithoutPair.map(card => {
-              return (card.open = false);
+              card.open = false;
             });
-          }, 450);
+          }, 500);
           setCountGame(countGame - 1);
           return;
         }
@@ -180,7 +180,6 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
   };
 
   const isGameEnded = status === STATUS_LOST || status === STATUS_WON;
-  // const isSimpleGameReset = status === STATUS_RESET;
   const isGameEndedLeaderBoard = status === STATUS_LEADERBOARD_WON;
 
   // Игровой цикл

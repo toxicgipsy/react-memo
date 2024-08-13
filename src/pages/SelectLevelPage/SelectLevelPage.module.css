@@ -63,16 +63,58 @@
   color: #0080c1;
 }
 
+/* Скрываем стандартный чекбокс */
+input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Стиль для кастомного чекбокса */
+input[type="checkbox"] + label {
+  position: relative;
+  padding-left: 30px;
+  font-size: 20px;
+  line-height: 50px;
+  cursor: pointer;
+}
+
+/* Кастомный квадрат */
+input[type="checkbox"] + label:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+/* Добавляем галочку при отмеченном чекбоксе */
+input[type="checkbox"]:checked + label:after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 3px;
+  width: 8px;
+  height: 14px;
+  border: solid #4caf50;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
 label {
-  color: #004980;
+  color: #000;
   font-family: StratosSkyeng;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 100;
   line-height: 50px;
+  font-size: 20px;
 }
 
 .goLeaderBoard {
-  color: #004980;
+  color: #0080c1;
   font-family: StratosSkyeng;
   font-style: normal;
   font-weight: 400;
