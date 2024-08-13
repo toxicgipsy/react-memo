@@ -27,7 +27,7 @@ export function SelectLevelPage() {
         </ul>
         <div>
           <input type="checkbox" id="simpleMode" checked={simpleMode ? "checked" : false} onChange={toggleSimpleMode} />
-          <label htmlFor="simpleMode">Легкий режим — включает 3 жизни</label>
+          <label htmlFor="simpleMode">Легкий режим (3 жизни)</label>
           <Link to="/leaderboard">
             <div className={styles.goLeaderBoard}>Перейти к лидерборду</div>
           </Link>

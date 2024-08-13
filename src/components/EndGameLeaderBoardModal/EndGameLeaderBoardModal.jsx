@@ -42,8 +42,11 @@ export function EndGameLeaderBoardModal({ gameDurationMinutes, gameDurationSecon
         }}
       />
       <p className={styles.description}>Затраченное время:</p>
-      <div className={styles.time}>
+      {/* <div className={styles.time}>
         {gameDurationMinutes.toString().padStart("2", "0")}.{gameDurationSeconds.toString().padStart("2", "0")}
+      </div> */}
+      <div className={styles.time}>
+        {gameDurationMinutes.toString().padStart(2, "0")}.{gameDurationSeconds.toString().padStart(2, "0")}
       </div>
       <Button onClick={() => addLeaderBoard(true)}>Играть снова</Button>
       <div className={styles.goLeaderBoard} onClick={() => addLeaderBoard(false)}>

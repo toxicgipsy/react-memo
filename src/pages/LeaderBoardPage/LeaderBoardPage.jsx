@@ -18,6 +18,12 @@ export const LeaderBoardPage = () => {
       });
   }, [setLeaderList]);
 
+  const formatTime = timeInSeconds => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -199,7 +205,7 @@ export const LeaderBoardPage = () => {
               </svg>
             )}
           </div>
-          <div className={styles.rowTable__time}>{leader.time}</div>
+          <div className={styles.rowTable__time}>{formatTime(leader.time)}</div>
         </div>
       ))}
     </div>
