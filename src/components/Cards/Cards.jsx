@@ -6,10 +6,13 @@ import { EndGameModal } from "../../components/EndGameModal/EndGameModal";
 import { Button } from "../../components/Button/Button";
 import { Card } from "../../components/Card/Card";
 import { useSimpleModeContext } from "../../context/hooks/useSimpleMode";
+import { getLeaders } from "../../utils/api";
+import { EndGameLeaderBoardModal } from "../EndGameLeaderBoardModal/EndGameLeaderBoardModal";
 
 // Игра закончилась
 const STATUS_LOST = "STATUS_LOST";
 const STATUS_WON = "STATUS_WON";
+const STATUS_LEADERBOARD_WON = "STATUS_LEADERBOARD_WON";
 // Идет игра: карты закрыты, игрок может их открыть
 const STATUS_IN_PROGRESS = "STATUS_IN_PROGRESS";
 // Начало игры: игрок видит все карты в течении нескольких секунд
@@ -42,6 +45,20 @@ function getTimerValue(startDate, endDate) {
  * previewSeconds - сколько секунд пользователь будет видеть все карты открытыми до начала игры
  */
 export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
+  useEffect(() => {
+    getLeaders()
+      .then(data => {
+        const leaderList = data.leaders.sort((a, b) => a.time - b.time).slice(0, 10);
+        const leaderWithMaxTime = leaderList.reduce((acc, curr) => {
+          return acc.time > curr.time ? acc : curr;
+        }, {});
+        setLastTime(leaderWithMaxTime.time);
+        return;
+      })
+      .catch(error => {
+        console.log(error.message);
+      });
+  }, []);
   // В cards лежит игровое поле - массив карт и их состояние открыта\закрыта
   const [cards, setCards] = useState([]);
   // Текущий статус игры
@@ -51,6 +68,8 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
   const { simpleMode } = useSimpleModeContext();
   // Количество попыток в легком режиме
   const [countGame, setCountGame] = useState(3);
+  // Получаем наихудший результат в лидерборде
+  const [lastTime, setLastTime] = useState(null);
 
   // Дата начала игры
   const [gameStartDate, setGameStartDate] = useState(null);
@@ -111,6 +130,14 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
 
     // Победа - все карты на поле открыты
     if (isPlayerWon) {
+      if (pairsCount === 9) {
+        const timeGame = timer.minutes * 60 + timer.seconds;
+        if (timeGame < lastTime) {
+          finishGame(STATUS_LEADERBOARD_WON);
+          return;
+        }
+      }
+      setCountGame(3);
       finishGame(STATUS_WON);
       return;
     }
@@ -137,9 +164,9 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
         if (countGame > 1) {
           setTimeout(() => {
             openCardsWithoutPair.map(card => {
-              return (card.open = false);
+              card.open = false;
             });
-          }, 450);
+          }, 500);
           setCountGame(countGame - 1);
           return;
         }
@@ -153,6 +180,7 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
   };
 
   const isGameEnded = status === STATUS_LOST || status === STATUS_WON;
+  const isGameEndedLeaderBoard = status === STATUS_LEADERBOARD_WON;
 
   // Игровой цикл
   useEffect(() => {
@@ -190,6 +218,7 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
     };
   }, [gameStartDate, gameEndDate]);
 
+  const timeGame = timer.minutes * 60 + timer.seconds;
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -241,6 +270,17 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
             gameDurationSeconds={timer.seconds}
             gameDurationMinutes={timer.minutes}
             onClick={resetGame}
+          />
+        </div>
+      ) : null}
+
+      {isGameEndedLeaderBoard ? (
+        <div className={styles.modalContainer}>
+          <EndGameLeaderBoardModal
+            gameDurationSeconds={timer.seconds}
+            gameDurationMinutes={timer.minutes}
+            timeGame={timeGame}
+            resetGame={resetGame}
           />
         </div>
       ) : null}

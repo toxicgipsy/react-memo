@@ -1,0 +1,85 @@
+.modal {
+  width: 480px;
+  height: 634px;
+  border-radius: 12px;
+  background: #c2f5ff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.image {
+  width: 96px;
+  height: 96px;
+  margin-bottom: 8px;
+}
+
+.title {
+  color: #004980;
+  font-variant-numeric: lining-nums proportional-nums;
+  font-family: StratosSkyeng;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 48px;
+
+  margin-bottom: 28px;
+}
+
+.description {
+  color: #000;
+  font-variant-numeric: lining-nums proportional-nums;
+  font-family: StratosSkyeng;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 32px;
+
+  margin-bottom: 10px;
+}
+
+.time {
+  color: #000;
+  font-family: StratosSkyeng;
+  font-size: 64px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 72px;
+
+  margin-bottom: 40px;
+}
+
+.goLeaderBoard {
+  color: #004980;
+  font-family: StratosSkyeng;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 50px;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.inputUser {
+  width: 276px;
+  height: 45px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  text-align: center;
+  font-family: StratosSkyeng;
+  font-size: 24px;
+  margin-bottom: 28px;
+}
+
+.inputUser::placeholder {
+  color: #999999;
+  text-align: center;
+}
+
+.errorName {
+  font-family: StratosSkyeng;
+  color: red;
+}
