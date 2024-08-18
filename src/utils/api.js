@@ -1,5 +1,5 @@
 export const getLeaders = async () => {
-  const response = await fetch("https://wedev-api.sky.pro/api/leaderboard", { method: "GET" });
+  const response = await fetch("https://wedev-api.sky.pro/api/v2/leaderboard", { method: "GET" });
   if (!response.ok) {
     throw new Error("Не получилось загрузить список, попробуй позже");
   }
@@ -8,7 +8,7 @@ export const getLeaders = async () => {
 };
 
 export const addLeaders = async ({ name, time, achievements }) => {
-  const response = await fetch("https://wedev-api.sky.pro/api/leaderboard", {
+  const response = await fetch("https://wedev-api.sky.pro/api/v2/leaderboard", {
     method: "POST",
     body: JSON.stringify({ name, time, achievements }),
   });
