@@ -10,14 +10,11 @@ import { getLeaders } from "../../utils/api";
 import { EndGameLeaderBoardModal } from "../EndGameLeaderBoardModal/EndGameLeaderBoardModal";
 import * as S from "../Cards/Cards.styled";
 import { useEpiphanyContext } from "../../context/hooks/useEpiphany";
-import { ReserSimpleGameModal } from "../ReserSimpleGameModal/ReserSimpleGameModal";
 
 // Игра закончилась
 const STATUS_LOST = "STATUS_LOST";
 const STATUS_WON = "STATUS_WON";
 const STATUS_LEADERBOARD_WON = "STATUS_LEADERBOARD_WON";
-// Включен упрощенный режим, есть еще попытки
-const STATUS_RESET = "STATUS_RESET";
 // Идет игра: карты закрыты, игрок может их открыть
 const STATUS_IN_PROGRESS = "STATUS_IN_PROGRESS";
 // Начало игры: игрок видит все карты в течении нескольких секунд
@@ -191,7 +188,6 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
   };
 
   const isGameEnded = status === STATUS_LOST || status === STATUS_WON;
-  const isSimpleGameReset = status === STATUS_RESET;
   const isGameEndedLeaderBoard = status === STATUS_LEADERBOARD_WON;
 
   // Игровой цикл
@@ -360,18 +356,6 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
             gameDurationSeconds={timer.seconds}
             gameDurationMinutes={timer.minutes}
             onClick={resetGame}
-          />
-        </div>
-      ) : null}
-
-      {isSimpleGameReset ? (
-        <div className={styles.modalContainer}>
-          <ReserSimpleGameModal
-            isWon={status === STATUS_WON}
-            gameDurationSeconds={timer.seconds}
-            gameDurationMinutes={timer.minutes}
-            onClick={resetGame}
-            countGame={countGame}
           />
         </div>
       ) : null}
