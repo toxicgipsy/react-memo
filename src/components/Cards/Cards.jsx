@@ -8,6 +8,8 @@ import { Card } from "../../components/Card/Card";
 import { useSimpleModeContext } from "../../context/hooks/useSimpleMode";
 import { getLeaders } from "../../utils/api";
 import { EndGameLeaderBoardModal } from "../EndGameLeaderBoardModal/EndGameLeaderBoardModal";
+import * as S from "../Cards/Cards.styled";
+import { useEpiphanyContext } from "../../context/hooks/useEpiphany";
 
 // Игра закончилась
 const STATUS_LOST = "STATUS_LOST";
@@ -64,9 +66,9 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
   // Текущий статус игры
   const [status, setStatus] = useState(STATUS_PREVIEW);
 
-  // Получаем контекст упрощенной версии [вкл/выкл]
+  // Получаем контекст упрощенного режима: включен он или нет
   const { simpleMode } = useSimpleModeContext();
-  // Количество попыток в легком режиме
+  // Количество оставщихся попыток в упрощенном режиме
   const [countGame, setCountGame] = useState(3);
   // Получаем наихудший результат в лидерборде
   const [lastTime, setLastTime] = useState(null);
@@ -75,6 +77,10 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
   const [gameStartDate, setGameStartDate] = useState(null);
   // Дата конца игры
   const [gameEndDate, setGameEndDate] = useState(null);
+  // Стейт для паузы в игре
+  const [isPause, setIsPause] = useState(false);
+  // Получаем контекст прозрения: был включен он или нет
+  const { isEpiphany, setIsEpiphany } = useEpiphanyContext();
 
   // Стейт для таймера, высчитывается в setInteval на основе gameStartDate и gameEndDate
   const [timer, setTimer] = useState({
@@ -92,12 +98,14 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
     setGameStartDate(startDate);
     setTimer(getTimerValue(startDate, null));
     setStatus(STATUS_IN_PROGRESS);
+    setIsEpiphany(false);
   }
   function resetGame() {
     setGameStartDate(null);
     setGameEndDate(null);
     setTimer(getTimerValue(null, null));
     setStatus(STATUS_PREVIEW);
+    setIsEpiphany(false);
   }
 
   /**
@@ -107,7 +115,7 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
    * - "Игрок проиграл", если на поле есть две открытые карты без пары
    * - "Игра продолжается", если не случилось первых двух условий
    */
-  const openCard = clickedCard => {
+  const openCard = async clickedCard => {
     // Если карта уже открыта, то ничего не делаем
     if (clickedCard.open) {
       return;
@@ -210,13 +218,36 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
 
   // Обновляем значение таймера в интервале
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTimer(getTimerValue(gameStartDate, gameEndDate));
-    }, 300);
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [gameStartDate, gameEndDate]);
+    if (!isPause) {
+      const intervalId = setInterval(() => {
+        setTimer(getTimerValue(gameStartDate, gameEndDate));
+      }, 200);
+      return () => {
+        clearInterval(intervalId);
+      };
+    }
+  }, [gameStartDate, gameEndDate, isPause]);
+
+  // Функция срабатывания паузы на 5 секунд
+  const enablePause = () => {
+    setIsPause(true);
+    const openedCards = cards;
+    setCards(
+      cards.map(card => {
+        return {
+          ...card,
+          open: true,
+        };
+      }),
+    );
+    setTimeout(() => {
+      const newStartGame = new Date(gameStartDate.getTime() + 5000);
+      setGameStartDate(newStartGame);
+      setIsPause(false);
+      setCards(openedCards);
+      setIsEpiphany(true);
+    }, 5000);
+  };
 
   const timeGame = timer.minutes * 60 + timer.seconds;
   return (
@@ -243,9 +274,64 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
           )}
         </div>
         {status === STATUS_IN_PROGRESS ? (
-          <Button countGame={simpleMode ? countGame : null} onClick={resetGame}>
-            Начать заново
-          </Button>
+          <>
+            <S.OpenAllCardsImages onClick={!isEpiphany ? enablePause : null} $isEpiphany={isEpiphany}>
+              <svg width="68" height="68" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="68" height="68" rx="34" fill="#C2F5FF" />
+                <path
+                  d="m6.064 35.27.001.003C11.817 45.196 22.56 51.389 34 51.389c11.44 0 22.183-6.13 27.935-16.117l.001-.002.498-.87.142-.249-.142-.248-.498-.871-.001-.003C56.183 23.106 45.44 16.913 34 16.913c-11.44 0-22.183 6.193-27.935 16.116l-.001.003-.498.871-.142.248.142.248.498.871Z"
+                  fill="#fff"
+                  stroke="#E4E4E4"
+                />
+                <mask id="a" maskUnits="userSpaceOnUse" x="6" y="17" width="56" height="34">
+                  <path
+                    d="M34 50.889c-11.262 0-21.84-6.098-27.502-15.867L6 34.152l.498-.872C12.16 23.511 22.738 17.413 34 17.413s21.84 6.098 27.502 15.867l.498.871-.498.871C55.84 44.853 45.262 50.89 34 50.89Z"
+                    fill="#fff"
+                  />
+                </mask>
+                <g mask="url(#a)">
+                  <g filter="url(#b)">
+                    <path
+                      d="M34 50.889c-11.262 0-21.84-6.098-27.502-15.867L6 34.152l.498-.872C12.16 23.511 22.738 17.413 34 17.413s21.84 6.098 27.502 15.867l.498.871-.498.871C55.84 44.853 45.262 50.89 34 50.89Z"
+                      fill="#fff"
+                    />
+                  </g>
+                  <circle cx="34.311" cy="26.187" r="17.111" fill="url(#c)" />
+                  <path
+                    d="M39.29 26.373A5.284 5.284 0 0 1 34 21.084c0-1.057.311-2.115.871-2.924-.31-.062-.622-.062-.87-.062-4.605 0-8.276 3.733-8.276 8.275 0 4.605 3.733 8.276 8.275 8.276 4.605 0 8.276-3.733 8.276-8.276 0-.31 0-.622-.063-.87-.808.56-1.804.87-2.924.87Z"
+                    fill="url(#d)"
+                  />
+                </g>
+                <defs>
+                  <linearGradient id="c" x1="34.311" y1="9.076" x2="34.311" y2="43.298" gradientUnits="userSpaceOnUse">
+                    <stop />
+                    <stop offset="1" />
+                  </linearGradient>
+                  <linearGradient id="d" x1="34" y1="18.098" x2="34" y2="34.649" gradientUnits="userSpaceOnUse">
+                    <stop />
+                    <stop offset="1" />
+                  </linearGradient>
+                  <filter id="b" x="6" y="17.413" width="60" height="35.476" filterUnits="userSpaceOnUse">
+                    <feFlood result="BackgroundImageFix" />
+                    <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha"
+                    />
+                    <feOffset dx="4" dy="2" />
+                    <feGaussianBlur stdDeviation="3" />
+                    <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+                    <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0" />
+                    <feBlend in2="shape" result="effect1_innerShadow_0_1" />
+                  </filter>
+                </defs>
+              </svg>
+            </S.OpenAllCardsImages>
+            <Button countGame={simpleMode ? countGame : null} onClick={resetGame}>
+              Начать заново
+            </Button>
+          </>
         ) : null}
       </div>
 
